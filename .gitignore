@@ -9,4 +9,6 @@
 node_modules/
 vendor/
 .terraform/
+
+# Terraform variable files often contain secrets
 *.tfvars
