@@ -36,6 +36,7 @@ locals {
       cw_stream_prefix      = local.app_name_and_env
       docker_image          = "silintl/youtrack-backup"
       docker_tag            = var.docker_tag
+      keep_count            = var.keep_count
       memory                = var.memory
       yt_token              = var.youtrack_token
       yt_url                = var.youtrack_url

@@ -69,6 +69,12 @@ variable "docker_tag" {
   default     = "latest"
 }
 
+variable "keep_count" {
+  description = "Number of backup files to keep"
+  type        = number
+  default     = 0
+}
+
 variable "memory" {
   description = "Amount of memory to be given to the app"
   type        = number
