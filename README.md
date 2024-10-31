@@ -12,7 +12,7 @@ See [youtrack-backup](https://github.com/silinternational/youtrack-backup) for d
 
 The Terraform remote state is built by a private workspace and is responsible for managing:
 
-* IAM users: codeship, etc.
+* IAM role
 * VPC - Subnets, NAT, IG, etc.
 * Security Groups for Cloudflare, etc.
 * ECS Cluster
