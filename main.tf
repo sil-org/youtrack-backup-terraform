@@ -40,6 +40,7 @@ locals {
       memory                = var.memory
       yt_token              = var.youtrack_token
       yt_url                = var.youtrack_url
+      sentry_dsn            = var.sentry_dsn
     }
   )
 }

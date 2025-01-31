@@ -108,3 +108,10 @@ variable "youtrack_url" {
   type        = string
   default     = ""
 }
+
+variable "sentry_dsn" {
+  description = "Sentry DSN for error tracking"
+  type        = string
+  sensitive   = true
+  default    = ""
+}
