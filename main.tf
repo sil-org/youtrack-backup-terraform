@@ -34,7 +34,7 @@ locals {
       cpu                   = var.cpu
       cw_log_group          = aws_cloudwatch_log_group.ytbackup.name
       cw_stream_prefix      = local.app_name_and_env
-      docker_image          = "silintl/youtrack-backup"
+      docker_image          = "ghcr.io/sil-org/youtrack-backup"
       docker_tag            = var.docker_tag
       keep_count            = var.keep_count
       memory                = var.memory
