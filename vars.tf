@@ -66,7 +66,7 @@ variable "customer" {
 variable "docker_tag" {
   description = "Tag for the Docker image to be used"
   type        = string
-  default     = "0.1.5"
+  default     = "latest"
 }
 
 variable "keep_count" {
