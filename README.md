@@ -8,7 +8,7 @@ database to a Backblaze B2 bucket on a scheduled basis.
 * Obtain a Backblaze Application Key.
 * Create a Backblaze B2 bucket.
 
-See [youtrack-backup](https://github.com/silinternational/youtrack-backup) for details.
+See [youtrack-backup](https://github.com/sil-org/youtrack-backup) for details.
 
 The Terraform remote state is built by a private workspace and is responsible for managing:
 
