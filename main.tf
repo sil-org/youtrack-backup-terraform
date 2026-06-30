@@ -52,78 +52,14 @@ resource "aws_ecs_task_definition" "this" {
   network_mode          = "bridge"
 }
 
-/*
- * Create role for scheduled running of backup task definitions.
- */
-resource "aws_iam_role" "ecs_events" {
-  name = "ecs_events-${local.app_name_and_env}"
+module "task" {
+  source  = "sil-org/scheduled-ecs-task/aws"
+  version = "~> 1.0"
 
-  assume_role_policy = <<DOC
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "events.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-DOC
-
-}
-
-resource "aws_iam_role_policy" "ecs_events_run_task_with_any_role" {
-  name = "ecs_events_run_task_with_any_role"
-  role = aws_iam_role.ecs_events.id
-
-  policy = <<DOC
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": "iam:PassRole",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "ecs:RunTask",
-            "Resource": "${aws_ecs_task_definition.this.arn_without_revision}:*"
-        }
-    ]
-}
-DOC
-
-}
-
-/*
- * CloudWatch configuration to start file system backup.
- */
-resource "aws_cloudwatch_event_rule" "this" {
-  name                = local.app_name_and_env
-  description         = "Start YouTrack backup on cron schedule"
-  is_enabled          = var.backup_enabled
-  schedule_expression = "cron(${var.backup_schedule})"
-
-  tags = {
-    app_name = var.app_name
-    app_env  = local.app_env
-  }
-}
-
-resource "aws_cloudwatch_event_target" "b2_backup" {
-  target_id = "run-${local.app_name_and_env}"
-  rule      = aws_cloudwatch_event_rule.this.name
-  arn       = local.ecs_cluster_arn
-  role_arn  = aws_iam_role.ecs_events.arn
-
-  ecs_target {
-    task_count          = 1
-    launch_type         = "EC2"
-    task_definition_arn = aws_ecs_task_definition.this.arn
-  }
+  name                   = local.app_name_and_env
+  event_rule_description = "Start YouTrack backup on cron schedule"
+  enable                 = var.backup_enabled
+  event_schedule         = "cron(${var.backup_schedule})"
+  ecs_cluster_arn        = local.ecs_cluster_arn
+  task_definition_arn    = aws_ecs_task_definition.this.arn
 }
