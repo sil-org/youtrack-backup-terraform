@@ -44,14 +44,6 @@ locals {
         value = var.app_name
       },
       {
-        name  = "AWS_ACCESS_KEY_ID"
-        value = var.aws_access_key
-      },
-      {
-        name  = "AWS_SECRET_ACCESS_KEY"
-        value = var.aws_secret_key
-      },
-      {
         name  = "AWS_REGION"
         value = var.aws_region
       },
