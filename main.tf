@@ -22,32 +22,74 @@ resource "aws_cloudwatch_log_group" "ytbackup" {
  * Create task definition for file system backup
  */
 locals {
-  task_def = templatefile("${path.module}/task-def-yt-backup.tftpl",
-    {
-      app_name              = var.app_name
-      aws_access_key_id     = var.aws_access_key
-      aws_access_key        = var.aws_secret_key
-      aws_region            = var.aws_region
-      b2_application_key_id = var.b2_application_key_id
-      b2_application_key    = var.b2_application_key
-      b2_bucket             = var.b2_bucket
-      cpu                   = var.cpu
-      cw_log_group          = aws_cloudwatch_log_group.ytbackup.name
-      cw_stream_prefix      = local.app_name_and_env
-      docker_image          = "ghcr.io/sil-org/youtrack-backup"
-      docker_tag            = var.docker_tag
-      keep_count            = var.keep_count
-      memory                = var.memory
-      yt_token              = var.youtrack_token
-      yt_url                = var.youtrack_url
-      sentry_dsn            = var.sentry_dsn
+  container_def = jsonencode([{
+    image     = "ghcr.io/sil-org/youtrack-backup:${var.docker_tag}"
+    name      = "youtrack-backup"
+    essential = true
+    cpu       = var.cpu
+    memory    = var.memory
+
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.ytbackup.name
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = local.app_name_and_env
+      }
     }
-  )
+
+    environment = [
+      {
+        name  = "APP_NAME"
+        value = var.app_name
+      },
+      {
+        name  = "AWS_ACCESS_KEY_ID"
+        value = var.aws_access_key
+      },
+      {
+        name  = "AWS_SECRET_ACCESS_KEY"
+        value = var.aws_secret_key
+      },
+      {
+        name  = "AWS_REGION"
+        value = var.aws_region
+      },
+      {
+        name  = "B2_APPLICATION_KEY_ID"
+        value = var.b2_application_key_id
+      },
+      {
+        name  = "B2_APPLICATION_KEY"
+        value = var.b2_application_key
+      },
+      {
+        name  = "B2_BUCKET"
+        value = var.b2_bucket
+      },
+      {
+        name  = "KEEP_COUNT"
+        value = var.keep_count
+      },
+      {
+        name  = "YT_TOKEN"
+        value = var.youtrack_token
+      },
+      {
+        name  = "YT_URL"
+        value = var.youtrack_url
+      },
+      {
+        name  = "SENTRY_DSN"
+        value = var.sentry_dsn
+      },
+    ]
+  }])
 }
 
 resource "aws_ecs_task_definition" "this" {
   family                = "${var.app_name}-${local.app_env}"
-  container_definitions = local.task_def
+  container_definitions = local.container_def
   task_role_arn         = ""
   network_mode          = "bridge"
 }
