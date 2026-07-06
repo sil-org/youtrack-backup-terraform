@@ -61,7 +61,7 @@ locals {
       },
       {
         name  = "KEEP_COUNT"
-        value = var.keep_count
+        value = tostring(var.keep_count)
       },
       {
         name  = "YT_TOKEN"
