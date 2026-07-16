@@ -1,0 +1,11 @@
+name: Test
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  validate:
+    uses: sil-org/workflows/.github/workflows/terraform.yml@main
+    with:
+      terraform-version: ~> 1.0
