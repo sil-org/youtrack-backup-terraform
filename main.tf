@@ -88,7 +88,7 @@ resource "aws_ecs_task_definition" "this" {
 
 module "task" {
   source  = "sil-org/scheduled-ecs-task/aws"
-  version = "~> 1.0"
+  version = "~> 1.1"
 
   name                   = local.app_name_and_env
   event_rule_description = "Start YouTrack backup on cron schedule"
